@@ -1,21 +1,44 @@
 import styles from "./styles.module.scss"
 
 import logoImage from "../../assets/logo.svg"
+import { useEffect, useState } from "react";
+import { api } from "../../services/api";
+
+interface Message {
+  id: string
+  text: string
+  user: {
+    name: string
+    avatar_url: string
+  }
+}
 
 
 function MessageList() {
+  const [messages, setMessages] = useState<Message[]>([])
+
+
+  useEffect(() => {
+    api.get<Message[]>('/messages').then(response => {
+
+      const { data } = response
+
+      setMessages(data)
+    })
+  }, [])
+
   return <div className={styles.messageListWrapper}>
     <img src={logoImage} alt="Logo DoWhile" />
 
     <ul className={styles.messageList}>
-      {new Array(3).fill(0).map((_, index) => (
+      {messages.map((message: Message, index: number) => (
         <li key={index} className={styles.message}>
-          <p className={styles.messageContent}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo recusandae assumenda ducimus molestias culpa voluptate architecto quam qui non molestiae, vitae iste numquam cum esse error iure sint similique ad.</p>
+          <p className={styles.messageContent}>{message.text}</p>
           <div className={styles.messageUser}>
             <div className={styles.userImage}>
-              <img src="https://github.com/paulospiguel.png" alt="Avatar Paulo Spiguel" />
+              <img src={message.user.avatar_url} alt="Avatar Paulo Spiguel" />
             </div>
-            <span>Paulo Spiguel</span>
+            <span>{message.user.name}</span>
           </div>
         </li>
       ))}
