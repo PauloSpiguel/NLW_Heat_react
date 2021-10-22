@@ -1,9 +1,9 @@
-import styles from "./styles.module.scss"
+import { useEffect, useState } from "react";
 
 import logoImage from "../../assets/logo.svg"
-import { useEffect, useState } from "react";
 import { api } from "../../services/api";
 
+import styles from "./styles.module.scss"
 interface Message {
   id: string
   text: string
@@ -13,10 +13,8 @@ interface Message {
   }
 }
 
-
 function MessageList() {
   const [messages, setMessages] = useState<Message[]>([])
-
 
   useEffect(() => {
     api.get<Message[]>('/messages').then(response => {
