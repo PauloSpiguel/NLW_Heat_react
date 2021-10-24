@@ -9,6 +9,7 @@ type User = {
   id: string
   github_id: number
   login: string
+  name: string,
   avatar_url: string
 }
 
@@ -45,6 +46,8 @@ const AuthProvider = ({ children }: AuthContext) => {
     const { token, user } = response.data
 
     localStorage.setItem("@doWhile:token", token)
+
+    api.defaults.headers.common.authorization = `Bearer ${token}`
 
     setUser(user);
   }
